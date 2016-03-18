@@ -1,24 +1,16 @@
-import org.apache.spark.api.java;
-import org.apache.spark.api.java.function;
-import org.apache.spark;
-import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.*;
+import org.apache.spark.api.java.function.*;
 
-object main_test {//extends App {
- def main (args: Array[String]): Unit = {
-    println("Hello, world!");
-    //testSpark (Array("T","F"));
-  };
- 
- def testSpark (args: Array[String]): Unit = {
- val conf = new SparkConf()
+class sentiment {
+ SparkConf conf = new SparkConf()
                  .setAppName("Twitter Sentiment Analysis");
 
 if (args.length > 0)
-    conf.setMaster("args[0]");
+    conf.setMaster(args[0]);
 else
     conf.setMaster("local[2]");
 
-val ssc = new JavaStreamingContext(
+JavaStreamingContext ssc = new JavaStreamingContext(
     conf,
     new Duration(2000));
 
@@ -69,18 +61,17 @@ JavaPairDStream<Tuple2<Long, String>, Tuple2<Float, Float>> joined =
 JavaDStream<Tuple4<Long, String, Float, Float>> scoredTweets =
     joined.map(new Function<Tuple2<Tuple2<Long, String>,
                                    Tuple2<Float, Float>>,
-                            Tuple4<Long, String, Float, Float>>() 
-            {
-                public Tuple4<Long, String, Float, Float> call(
-                        Tuple2<Tuple2<Long, String>, Tuple2<Float, Float>> tweet)
-                    {
-                        return new Tuple4<Long, String, Float, Float>(
-                            tweet._1()._1(),
-                            tweet._1()._2(),
-                            tweet._2()._1(),
-                            tweet._2()._2());
-                    }
-            });
+                            Tuple4<Long, String, Float, Float>>() {
+    public Tuple4<Long, String, Float, Float> call(
+        Tuple2<Tuple2<Long, String>, Tuple2<Float, Float>> tweet)
+    {
+        return new Tuple4<Long, String, Float, Float>(
+            tweet._1()._1(),
+            tweet._1()._2(),
+            tweet._2()._1(),
+            tweet._2()._2());
+    }
+});
 
 JavaDStream<Tuple5<Long, String, Float, Float, String>> result =
     scoredTweets.map(new ScoreTweetsFunction());
@@ -89,6 +80,5 @@ result.foreachRDD(new FileWriter());
 result.foreachRDD(new HTTPNotifierFunction());
 
 ssc.start();
-ssc.awaitTermination();
+ssc.awaitTermination(); 
 }
- }
