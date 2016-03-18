@@ -1,16 +1,13 @@
-import org.apache.spark.api.java.*;
-import org.apache.spark.api.java.function.*;
+import org.apache.spark._
 
 class sentiment {
- SparkConf conf = new SparkConf()
-                 .setAppName("Twitter Sentiment Analysis");
+  
+  def main (args: Array[String]): Unit = {
+   val conf = new SparkConf()
+         .setAppName("Twitter Sentiment Analysis");
 
-if (args.length > 0)
-    conf.setMaster(args[0]);
-else
-    conf.setMaster("local[2]");
-
-JavaStreamingContext ssc = new JavaStreamingContext(
+/*
+val ssc = new JavaStreamingContext(
     conf,
     new Duration(2000));
 
@@ -80,5 +77,6 @@ result.foreachRDD(new FileWriter());
 result.foreachRDD(new HTTPNotifierFunction());
 
 ssc.start();
-ssc.awaitTermination(); 
+ssc.awaitTermination();*/
+    }
 }

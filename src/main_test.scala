@@ -1,14 +1,21 @@
-import org.apache.spark.api.java;
-import org.apache.spark.api.java.function;
-import org.apache.spark;
-import org.apache.spark.SparkConf;
+import org.apache.spark._
 
 object main_test {//extends App {
  def main (args: Array[String]): Unit = {
     println("Hello, world!");
+    
+    val conf = new SparkConf()
+         .setAppName("testApp");
+    
+    
+    val sc = new SparkContext(conf);
+    
+    val file = sc.textFile("C:\\Users\\TeamVictor\\Desktop\\a.txt");
+    
+    
     //testSpark (Array("T","F"));
   };
- 
+ /*
  def testSpark (args: Array[String]): Unit = {
  val conf = new SparkConf()
                  .setAppName("Twitter Sentiment Analysis");
@@ -90,5 +97,5 @@ result.foreachRDD(new HTTPNotifierFunction());
 
 ssc.start();
 ssc.awaitTermination();
-}
+}*/
  }
